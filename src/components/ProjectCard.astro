@@ -1,0 +1,10 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { project: CollectionEntry<'projects'>; index: number; }
+const {project, index} = Astro.props;
+---
+<a class="project-card" href={`/projects/${project.id}/`}>
+  <div class:list={['project-art', project.data.color]} aria-hidden="true"><span class="art-top">{project.data.type} / 0{index + 1}</span><div class="art-mark">{project.data.color === 'green' ? '山' : project.data.color === 'sand' ? 'Aa' : '↗'}</div><span class="art-bottom">A SMALL IDEA, MADE REAL.</span><div class="art-orbit"></div></div>
+  <div class="project-caption"><div><span class="eyebrow">{project.data.type} · 示例项目</span><h3>{project.data.title}</h3></div><span class="round-arrow" aria-hidden="true">↗</span></div>
+  <p>{project.data.description}</p><div class="tags">{project.data.tags.map(tag => <span>{tag}</span>)}</div>
+</a>

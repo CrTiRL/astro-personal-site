@@ -1,0 +1,4 @@
+---
+import Base from '../layouts/Base.astro'; import {site} from '../site';
+---
+<Base title="关于"><section class="page-intro"><p class="eyebrow">BEHIND THE NOTES / 关于我</p><h1>你好，我是{site.name}<span class="accent">。</span></h1><p>{site.tagline}</p></section><div class="about-layout"><div class="profile-mark" aria-hidden="true">山<small>STAY CURIOUS.</small></div><div class="prose"><blockquote>这里是一份等待你写下自己故事的个人主页模板。</blockquote><h2>关于这个空间</h2><p>我希望用这个网站记录学习、展示作品，也保存那些稍纵即逝的想法。文章可以是一份笔记，作品可以从一个很小的问题开始。</p><h2>我正在关注</h2><ul><li>技术：理解工具，也理解工具背后的原理。</li><li>设计：让信息更清晰，让使用更自然。</li><li>写作：把模糊的想法整理成能分享的文字。</li></ul><h2>和我联系</h2>{site.email ? <a class="button" href={`mailto:${site.email}`}>写一封邮件 ↗</a> : <p>联系方式待补充。</p>}{site.github && <p><a href={site.github}>我的 GitHub ↗</a></p>}<hr /><p class="muted">本页为示例介绍。请将姓名、简介、关注方向与联系方式替换为真实信息。</p></div></div></Base>

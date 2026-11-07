@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostRow from '../../components/PostRow.astro';
+import { posts } from '../../lib/content';
+const articles = await posts(); const tags = [...new Set(articles.flatMap(p => p.data.tags))];
+---
+<Base title="文章"><section class="page-intro"><p class="eyebrow">THE JOURNAL / 文字存档</p><h1>记录，是思考的开始<span class="accent">。</span></h1><p>学习笔记、设计观察，以及那些值得留下的想法。</p></section><div class="blog-tools"><label class="search">搜索文章<input id="search" type="search" placeholder="输入标题、标签或关键词…" /></label><div class="filters" aria-label="文章分类"><button data-tag="全部" aria-pressed="true">全部</button>{tags.map(tag => <button data-tag={tag} aria-pressed="false">{tag}</button>)}</div></div><p class="eyebrow" id="result-count" aria-live="polite">共 {articles.length} 篇文章</p><div class="post-list" id="articles">{articles.map(post => <div data-article data-tags={JSON.stringify(post.data.tags)} data-search={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')}`}><PostRow post={post} /></div>)}</div><p id="empty" class="empty" hidden>没有找到匹配的文章，试试其他关键词。</p>
+<script>
+  let selected = '全部';
+  const search = document.querySelector<HTMLInputElement>('#search');
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-tag]');
+  function filter() {
+    let count = 0; const query = search?.value.trim().toLocaleLowerCase() || '';
+    document.querySelectorAll<HTMLElement>('[data-article]').forEach(row => {
+      const tags: string[] = JSON.parse(row.dataset.tags || '[]');
+      row.hidden = !((selected === '全部' || tags.includes(selected)) && (row.dataset.search || '').toLocaleLowerCase().includes(query));
+      if (!row.hidden) count++;
+    });
+    document.getElementById('result-count')!.textContent = `共 ${count} 篇文章`;
+    document.getElementById('empty')!.hidden = count !== 0;
+  }
+  search?.addEventListener('input', filter);
+  buttons.forEach(button => button.addEventListener('click', () => { selected = button.dataset.tag!; buttons.forEach(b => b.setAttribute('aria-pressed', String(b === button))); filter(); }));
+</script></Base>

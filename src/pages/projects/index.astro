@@ -1,0 +1,5 @@
+---
+import Base from '../../layouts/Base.astro'; import ProjectCard from '../../components/ProjectCard.astro'; import { projects } from '../../lib/content';
+const works = await projects();
+---
+<Base title="作品"><section class="page-intro"><p class="eyebrow">SELECTED WORK / 作品集</p><h1>让想法落地生根<span class="accent">。</span></h1><p>从一个小问题出发，做一些有用、也有趣的东西。</p><small>以下为可替换的示例项目，不代表真实个人经历。</small></section><div class="project-grid">{works.map((project,index) => <ProjectCard project={project} index={index} />)}</div></Base>

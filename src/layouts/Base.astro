@@ -1,0 +1,40 @@
+---
+import '../styles/global.css';
+import { site } from '../site';
+interface Props { title?: string; description?: string; }
+const { title, description = site.description } = Astro.props;
+const path = Astro.url.pathname;
+const links = [['/', '首页'], ['/blog/', '文章'], ['/projects/', '作品'], ['/about/', '关于']];
+const canonical = Astro.site ? new URL(path, Astro.site) : undefined;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width" />
+    <title>{title ? `${title} · ${site.title}` : `${site.title} — ${site.tagline}`}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:title" content={title || site.title} /><meta property="og:description" content={description} />
+    <meta property="og:type" content="website" /><meta property="og:locale" content="zh_CN" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#f7f6f0" />
+    <script is:inline>try { const t = localStorage.getItem('theme'); document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch {}</script>
+  </head>
+  <body>
+    <a class="skip" href="#main">跳至正文</a>
+    <header class="header wrap">
+      <a class="brand" href="/" aria-label={`${site.title}首页`}><span class="brand-icon">山</span><span>{site.title}<small>{site.en}</small></span></a>
+      <nav aria-label="主导航">{links.map(([href, label]) => <a href={href} aria-current={(href === '/' ? path === '/' : path.startsWith(href)) ? 'page' : undefined}>{label}</a>)}</nav>
+      <button class="theme" id="theme-toggle" aria-label="切换深浅色主题" title="切换深浅色主题">◐</button>
+    </header>
+    <main id="main" class="wrap"><slot /></main>
+    <footer class="wrap footer"><div><strong>{site.title}</strong><p>在这里，留下思考与创造的痕迹。</p></div><div class="footer-right"><span>© {new Date().getFullYear()} {site.name}</span><a href="/about/">关于这个空间 ↗</a>{site.github && <a href={site.github}>GitHub ↗</a>}</div></footer>
+    <script>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = theme;
+        try { localStorage.setItem('theme', theme); } catch {}
+      });
+    </script>
+  </body>
+</html>
